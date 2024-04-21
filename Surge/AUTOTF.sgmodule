@@ -1,0 +1,13 @@
+#!name=Auto Join TestFlight
+#!desc=Supervision TestFlight and Pack Module, use only Surge
+#!system=ios
+#!category=TestFlightM
+#!arguments=INFO_FETCH_SCRIPT_NAME:GetInfo,CRON_SECONDS:10,START_HOUR:0,END_HOUR:23
+#!arguments-desc=[Settings]\n1. INFO_FETCH_SCRIPT_NAME: Customize the start and stop of the "GetInfo" script, After obtaining the TestFlight Token and APP_ID, in order to avoid unnecessary mitm, It is recommended to add # to the script name parameter to comment out the script.;\n2. CRON_SECONDS: Customize the seconds interval for the execution of the "Add Test" script. By default, it is executed every 5 seconds.;\n3. START_HOUR: Customize the time when the "Join Test" script starts executing every day, the default is 0 o'clock (the default starts and ends all day);\n4. END_HOUR: Customize the time when the "Join Test" script ends execution every day, the default is 23:00 (the default starts and ends all day);\n\n[Instructions]\n1. After enabling the "GetInfo" script, open the TestFlight app to obtain the Token;\n2. After enabling the "Information Obtain" script, click the TestFlight link to obtain the APP_ID;\n3. Adjust the CRON SECONDS, START_HOUR, END_HOUR parameters to change the execution frequency and start and end time periods of the "Add Test" script;\n\n[Manual Operation]\n1. Boxjs fills in the persistent data of "APPID",APP_ID is the TestFlight link https://testflight.apple.com/join/LPQmtkUs The string after the join (for example, "LPQmtkUs,xxx,xxx multiple keys are separated by comma , ");\n2. Boxjs subscription https://raw.githubusercontent.com/githubdulong/Script/master/boxjs.json;\n\n[Module Introduction]\n▎Manually or automatically capture and store the application ID opened by the TestFlight author, and try to automatically join the TestFlight program. \n▎Invalid TestFlight application IDs are automatically removed, and log output can be viewed in the placeholder type. \n▎Recommended TestFlight application release channel https://t.me/TestFlightM。
+
+[Script]
+{{{INFO_FETCH_SCRIPT_NAME}}} = type=http-request,pattern=^https:\/\/testflight\.apple\.com\/(v3\/accounts\/.*[^\/accept]|join\/[A-Za-z0-9]+)$,script-path=https://raw.githubusercontent.com/manhseo/TF_Trap/main/Surge/Auto_join_TF.js
+AutoTF = type=cron,cronexp="*/{{{CRON_SECONDS}}} * {{{START_HOUR}}}-{{{END_HOUR}}} * * *",script-path=https://raw.githubusercontent.com/manhseo/TF_Trap/main/Surge/Auto_join_TF.js,wake-system=1,timeout=180,engine=auto
+
+[MITM]
+hostname = %APPEND% testflight.apple.com
